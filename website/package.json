@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "menu": "node app/main-menu.js",
+    "location": "node app/location-to-coordinates.js",
+    "datetime": "node app/datetime-parser.js"
   },
   "dependencies": {
     "react": "19.1.0",
