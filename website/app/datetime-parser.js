@@ -1,10 +1,4 @@
-const readline = require('readline');
-
-// Create readline interface for terminal input
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+'use server';
 
 /**
  * Extracts and parses time from input string
@@ -89,7 +83,7 @@ function extractTime(input) {
  * @param {Date} baseDate - Base date for relative calculations (defaults to now)
  * @returns {Date}
  */
-function parseDateTime(input, baseDate = new Date()) {
+export async function parseDateTime(input, baseDate = new Date()) {
   const now = new Date(baseDate);
   
   // Extract time information first
@@ -366,66 +360,3 @@ function formatDateTime(date) {
   
   return date.toLocaleString('en-US', options);
 }
-
-/**
- * Main function to handle user input and date/time parsing
- */
-async function main() {
-  console.log('=== Natural Language Date/Time Parser ===\n');
-  console.log('Examples: "next friday", "tomorrow 6pm", "sept 13 next year", "in 3 days at 2:30pm"\n');
-  
-  rl.question('Enter a date/time expression: ', (input) => {
-    if (!input.trim()) {
-      console.log('Error: Please provide a valid date/time expression.');
-      rl.close();
-      return;
-    }
-
-    console.log(`\nProcessing: "${input}"...\n`);
-
-    try {
-      const now = new Date();
-      const result = parseDateTime(input);
-      
-      if (result === null) {
-        console.log('❌ Could not parse date/time expression.');
-        console.log('\nSupported formats:');
-        console.log('- "today", "tomorrow", "yesterday"');
-        console.log('- "next friday", "this monday"');
-        console.log('- "in 3 days", "in 2 weeks"');
-        console.log('- "5 days from now", "2 weeks ago"');
-        console.log('- "sept 13", "december 25 next year", "jan 5 2026"');
-        console.log('- Time only: "6" (next 6 o\'clock), "6pm", "3:30pm", "14:00"');
-        console.log('- With time: "tomorrow 6pm", "next friday at 3:30pm"');
-        console.log('- Standard date formats (e.g., "2025-12-25")');
-      } else {
-        console.log('✓ Date/Time parsed successfully!\n');
-        console.log('Formatted:', formatDateTime(result));
-        console.log('\nISO 8601:', result.toISOString());
-        console.log('Unix Timestamp:', Math.floor(result.getTime() / 1000));
-        console.log('JavaScript Timestamp:', result.getTime());
-        
-        // Show relative time from now
-        const diffMs = result.getTime() - now.getTime();
-        const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-        
-        if (diffDays > 0) {
-          console.log(`\nRelative: ${diffDays} day${diffDays !== 1 ? 's' : ''} from now`);
-        } else if (diffDays < 0) {
-          console.log(`\nRelative: ${Math.abs(diffDays)} day${Math.abs(diffDays) !== 1 ? 's' : ''} ago`);
-        } else {
-          console.log('\nRelative: Today');
-        }
-      }
-      
-    } catch (error) {
-      console.error('Error:', error.message);
-    } finally {
-      rl.close();
-    }
-  });
-}
-
-// Run the program
-main();
-

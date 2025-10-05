@@ -13,7 +13,7 @@ export const DisplayMap = ({
       center={center}
       zoom={zoom}
       scrollWheelZoom={true}
-      ref={setMap}
+      ref={setMap || props.ref}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

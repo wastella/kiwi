@@ -1,11 +1,6 @@
-const readline = require('readline');
-const https = require('https');
+"use server";
 
-// Create readline interface for terminal input
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+import https from 'https';
 
 /**
  * Prioritizes geographic locations over buildings/POIs
@@ -159,7 +154,7 @@ function generateFallbackQueries(location) {
  * @param {string} location - The location in natural language
  * @returns {Promise<{lat: string, lon: string, display_name: string, fallback: boolean}>}
  */
-async function geocodeLocation(location) {
+export async function geocodeLocation(location) {
   const fallbackQueries = generateFallbackQueries(location);
   
   for (let i = 0; i < fallbackQueries.length; i++) {
@@ -186,50 +181,3 @@ async function geocodeLocation(location) {
   
   throw new Error('Location not found');
 }
-
-/**
- * Main function to handle user input and coordinate conversion
- */
-async function main() {
-  console.log('=== Location to Coordinates Converter ===\n');
-  
-  rl.question('Enter a location (city, address, landmark, etc.): ', async (location) => {
-    if (!location.trim()) {
-      console.log('Error: Please provide a valid location.');
-      rl.close();
-      return;
-    }
-
-    console.log(`\nProcessing location: "${location}"...\n`);
-
-    try {
-      const result = await geocodeLocation(location);
-      
-      console.log('✓ Coordinates found!\n');
-      
-      // Notify if using fallback
-      if (result.fallback) {
-        console.log(`⚠️  Exact address not found. Using ${result.fallback_level}-level approximation.\n`);
-      }
-      
-      console.log('Coordinates:', `${result.lat}, ${result.lon}`);
-      console.log('Location:', result.display_name);
-      console.log('\nFormatted output:');
-      console.log(`Latitude: ${result.lat}`);
-      console.log(`Longitude: ${result.lon}`);
-      
-    } catch (error) {
-      console.error('Error:', error.message);
-      console.log('\nPlease try:');
-      console.log('- Being more specific (e.g., "Eiffel Tower, Paris")');
-      console.log('- Using a different format (e.g., city name, country)');
-      console.log('- Checking your internet connection');
-    } finally {
-      rl.close();
-    }
-  });
-}
-
-// Run the program
-main();
-
