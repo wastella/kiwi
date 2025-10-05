@@ -1,8 +1,7 @@
 'use client'
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function Navbar() {
-  const [activeLink, setActiveLink] = useState('home');
+export default function Navbar({ activeLink, setActiveLink }) { 
 
   const navItems = [
     { id: 'home', label: 'Home' },
@@ -10,42 +9,72 @@ export default function Navbar() {
     { id: 'datasources', label: 'Data Sources' }
   ];
 
+  const glassStyle = {
+    background: 'rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '60px',
+    transition: 'transform 0.3s ease, background 0.3s ease',
+  };
+
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #edededff 0%, #2d7a3e 100%)',
-      minHeight: '100vh',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     }}>
       <nav style={{
         background: 'transparent',
-        padding: '1.5rem 2rem'
+        padding: '1.5rem 1.5rem',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          gap: '1.5rem'
         }}>
-          <div style={{
-            color: 'white',
-            fontSize: '1.5rem',
-            fontWeight: 600,
-            textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
-          }}>
-            Logo
-          </div>
           
+          <div
+            style={{
+              ...glassStyle,
+              padding: '0.5rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}
+            onClick={() => setActiveLink('home')} 
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.1)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+            }}
+          >
+            <img
+              src="https://raw.githubusercontent.com/kijv/kiwi/refs/heads/website/website/KiwiFull2.png"
+              alt="Kiwi Logo"
+              style={{
+                height: '60px',
+                width: 'auto',
+                filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.2))',
+                userSelect: 'none'
+              }}
+            />
+          </div>
+
           <ul style={{
             display: 'flex',
             flexDirection: 'row',
             listStyle: 'none',
             gap: '0.5rem',
-            background: 'rgba(255, 255, 255, 0.1)',
+            ...glassStyle,
             padding: '0.5rem',
-            borderRadius: '50px',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
             margin: 0
           }}>
             {navItems.map(item => (
@@ -54,13 +83,13 @@ export default function Navbar() {
                   href={`#${item.id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    setActiveLink(item.id);
+                    setActiveLink(item.id); 
                   }}
                   style={{
                     color: activeLink === item.id ? '#2d7a3e' : 'white',
                     textDecoration: 'none',
                     fontSize: '1rem',
-                    padding: '0.75rem 1.5rem',
+                    padding: '0.75rem 0.75rem',
                     borderRadius: '50px',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     position: 'relative',
@@ -72,7 +101,8 @@ export default function Navbar() {
                       : 'none',
                     transform: activeLink === item.id ? 'translateY(-1px)' : 'none',
                     display: 'inline-block',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    cursor: 'pointer'
                   }}
                   onMouseEnter={(e) => {
                     if (activeLink !== item.id) {
