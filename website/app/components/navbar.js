@@ -2,6 +2,16 @@
 import React from 'react';
 
 export default function Navbar({ activeLink, setActiveLink }) { 
+  const [logoHovered, setLogoHovered] = React.useState(false);
+  const [logoWidth, setLogoWidth] = React.useState(90);
+
+  React.useEffect(() => {
+    if (logoHovered) {
+      setLogoWidth(220);
+    } else {
+      setLogoWidth(90);
+    }
+  }, [logoHovered]);
 
   const navItems = [
     { id: 'home', label: 'Home' },
@@ -43,27 +53,29 @@ export default function Navbar({ activeLink, setActiveLink }) {
               padding: '0.5rem 1rem',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer'
+              justifyContent: logoHovered ? 'flex-start' : 'center',
+              cursor: 'pointer',
+              overflow: 'hidden',
+              width: `${logoWidth}px`,
+              transition: 'width 1.5s cubic-bezier(0.19, 1, 0.22, 1), justify-content 1.5s cubic-bezier(0.19, 1, 0.22, 1)',
+              position: 'relative'
             }}
             onClick={() => setActiveLink('home')} 
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.1)';
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-            }}
+            onMouseEnter={() => setLogoHovered(true)}
+            onMouseLeave={() => setLogoHovered(false)}
           >
             <img
               src="https://raw.githubusercontent.com/kijv/kiwi/refs/heads/website/website/KiwiFull2.png"
               alt="Kiwi Logo"
               style={{
-                height: '60px',
-                width: 'auto',
+                height: '70px',
+                width: '200px',
+                objectFit: 'cover',
+                objectPosition: logoHovered ? 'left center' : '5% center',
                 filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.2))',
-                userSelect: 'none'
+                userSelect: 'none',
+                flexShrink: 0,
+                transition: 'object-position 1.5s cubic-bezier(0.19, 1, 0.22, 1)'
               }}
             />
           </div>
